@@ -23,5 +23,8 @@ jobs:
     - name: Set Password
       run: net user runneradmin YourPassword123
 
-    - name: Start Ngrok Tunnel
-      run: .\ngrok\ngrok.exe tcp 3389
+    - name: Start Ngrok Tunnel + Show Address
+      run: |
+        Start-Process -FilePath ".\ngrok\ngrok.exe" -ArgumentList "tcp 3389"
+        Start-Sleep -Seconds 10
+        Invoke-RestMethod http://127.0.0.1:4040/api/tunnels
