@@ -17,14 +17,17 @@ jobs:
 
     - name: Enable RDP
       run: |
-        Set-ItemProperty -Path 'HKLM:\System\CurrentControlSet\Control\Terminal Server' -name "fDenyTSConnections" -Value 0
+        Set-ItemProperty -Path 'HKLM:\System\CurrentControlSet\Control\Terminal Server' -Name "fDenyTSConnections" -Value 0
         Enable-NetFirewallRule -DisplayGroup "Remote Desktop"
 
     - name: Set Password
       run: net user runneradmin YourPassword123
 
-    - name: Start Ngrok Tunnel + Show Address
+    - name: Start Ngrok + Show RDP Address
       run: |
-        Start-Process -FilePath ".\ngrok\ngrok.exe" -ArgumentList "tcp 3389"
+        Start-Process -NoNewWindow -FilePath ".\ngrok\ngrok.exe" -ArgumentList "tcp 3389"
         Start-Sleep -Seconds 10
         Invoke-RestMethod http://127.0.0.1:4040/api/tunnels
+
+    - name: Keep Session Alive
+      run: Start-Sleep -Seconds 21600
